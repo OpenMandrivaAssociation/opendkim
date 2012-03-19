@@ -1,11 +1,11 @@
 %define libname %mklibname      opendkim %major
 %define devname %mklibname      opendkim -d
-%define major 5
-%define minor 2
+%define major 6
+%define minor 0
 
 Summary:	A DomainKeys Identified Mail (DKIM) milter to sign and/or verify mail
 Name:		opendkim
-Version:	2.4.3
+Version:	2.5.1
 Release:	1
 License:	BSD and Sendmail
 URL:		http://opendkim.org
