@@ -1,11 +1,11 @@
 %define libname %mklibname      opendkim %major
 %define devname %mklibname      opendkim -d
-%define major 6
-%define minor 0
+%define major 7
+%define minor 2
 
 Summary:	A DomainKeys Identified Mail (DKIM) milter to sign and/or verify mail
 Name:		opendkim
-Version:	2.5.1
+Version:	2.6.7
 Release:	1
 License:	BSD and Sendmail
 URL:		http://opendkim.org
@@ -190,7 +190,7 @@ mkdir -p %{buildroot}%{_localstatedir}/run/%{name}
 mkdir -p %{buildroot}%{_sysconfdir}/%{name}
 mkdir %{buildroot}%{_sysconfdir}/%{name}/keys
 
-install -m 0755 contrib/stats/%{name}-reportstats %{buildroot}%{_prefix}/bin/%{name}-reportstats
+install -m 0755 stats/%{name}-reportstats %{buildroot}%{_prefix}/bin/%{name}-reportstats
 sed -i 's|^OPENDKIMSTATSDIR="/var/db/opendkim"|OPENDKIMSTATSDIR="%{_localstatedir}/spool/%{name}"|g' %{buildroot}%{_prefix}/bin/%{name}-reportstats
 sed -i 's|^OPENDKIMDATOWNER="mailnull:mailnull"|OPENDKIMDATOWNER="%{name}:%{name}"|g' %{buildroot}%{_prefix}/bin/%{name}-reportstats
 
