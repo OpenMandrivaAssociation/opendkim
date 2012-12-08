@@ -1,11 +1,12 @@
 %define libname %mklibname      opendkim %major
+%define libname_strl %mklibname	strl %major
 %define devname %mklibname      opendkim -d
-%define major 7
-%define minor 2
+%define major 8
+%define minor 0
 
 Summary:	A DomainKeys Identified Mail (DKIM) milter to sign and/or verify mail
 Name:		opendkim
-Version:	2.6.7
+Version:	2.7.0
 Release:	1
 License:	BSD and Sendmail
 URL:		http://opendkim.org
@@ -31,10 +32,20 @@ Group:		System/Libraries
 This package contains the library files required for running services built
 using libopendkim.
 
+
+%package -n %libname_strl
+Summary:	An open source DKIM library
+Group:		System/Libraries
+
+%description -n %libname_strl
+This package contains the library files required for running services built
+using libopendkim.
+
 %package -n	%devname
 Summary:	Development files for libopendkim
 Group:		Development/C
 Requires:	%{libname} = %{version}-%{release}
+Requires:	%{libname_strl} = %{version}-%{release}
 Provides:	%{name}-devel = %{version}-%{release}
 
 %description -n %devname
@@ -190,9 +201,9 @@ mkdir -p %{buildroot}%{_localstatedir}/run/%{name}
 mkdir -p %{buildroot}%{_sysconfdir}/%{name}
 mkdir %{buildroot}%{_sysconfdir}/%{name}/keys
 
-install -m 0755 stats/%{name}-reportstats %{buildroot}%{_prefix}/bin/%{name}-reportstats
-sed -i 's|^OPENDKIMSTATSDIR="/var/db/opendkim"|OPENDKIMSTATSDIR="%{_localstatedir}/spool/%{name}"|g' %{buildroot}%{_prefix}/bin/%{name}-reportstats
-sed -i 's|^OPENDKIMDATOWNER="mailnull:mailnull"|OPENDKIMDATOWNER="%{name}:%{name}"|g' %{buildroot}%{_prefix}/bin/%{name}-reportstats
+install -m 0755 stats/%{name}-reportstats %{buildroot}%{_prefix}/sbin/%{name}-reportstats
+sed -i 's|^OPENDKIMSTATSDIR="/var/db/opendkim"|OPENDKIMSTATSDIR="%{_localstatedir}/spool/%{name}"|g' %{buildroot}%{_prefix}/sbin/%{name}-reportstats
+sed -i 's|^OPENDKIMDATOWNER="mailnull:mailnull"|OPENDKIMDATOWNER="%{name}:%{name}"|g' %{buildroot}%{_prefix}/sbin/%{name}-reportstats
 
 chmod 0644 contrib/convert/convert_keylist.sh
 
@@ -233,7 +244,6 @@ exit 0
 %config(noreplace) %{_sysconfdir}/sysconfig/%{name}
 %{_initrddir}/%{name}
 %{_sbindir}/*
-%{_bindir}/*
 %{_mandir}/*/*
 %dir %attr(-,%{name},%{name}) %{_localstatedir}/spool/%{name}
 %dir %attr(-,%{name},%{name}) %{_localstatedir}/run/%{name}
@@ -245,9 +255,28 @@ exit 0
 %{_libdir}/libopendkim.so.%{major}.0.%{minor}
 %{_libdir}/libopendkim.so.%{major}
 
+%files -n %libname_strl
+%{_libdir}/libstrl.so.*
+
 %files -n %devname
 %doc LICENSE LICENSE.Sendmail
 %doc libopendkim/docs/*.html
 %{_includedir}/%{name}
+%{_includedir}/strl/strl.h
 %{_libdir}/*.so
 %{_libdir}/pkgconfig/*.pc
+
+
+%changelog
+* Thu Jul 26 2012 Alexander Khrukin <akhrukin@mandriva.org> 2.6.7-1
++ Revision: 811147
+- version update 2.6.7
+
+* Mon Mar 19 2012 Alexander Khrukin <akhrukin@mandriva.org> 2.5.1-1
++ Revision: 785784
+- version update 2.5.1
+
+* Tue Dec 27 2011 Alexander Khrukin <akhrukin@mandriva.org> 2.4.3-1
++ Revision: 745549
+- imported package opendkim
+
