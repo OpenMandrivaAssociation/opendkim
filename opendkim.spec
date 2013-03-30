@@ -7,7 +7,7 @@
 Summary:	A DomainKeys Identified Mail (DKIM) milter to sign and/or verify mail
 Name:		opendkim
 Version:	2.7.0
-Release:	1
+Release:	2
 License:	BSD and Sendmail
 URL:		http://opendkim.org
 Group:		Networking/Mail
@@ -16,6 +16,7 @@ Requires (post): chkconfig
 Requires (preun): chkconfig, initscripts
 Requires (postun): initscripts
 BuildRequires:	sendmail-devel, openssl-devel, pkgconfig
+BuildRequires:	autoconf
 Source0:	http://downloads.sourceforge.net/%{name}/%{name}-%{version}.tar.gz
 
 %description
@@ -56,6 +57,7 @@ required for developing applications against libopendkim.
 %setup -q
 
 %build
+autoreconf -fiv
 %configure --enable-stats
 
 %install
