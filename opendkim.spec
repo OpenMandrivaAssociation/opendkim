@@ -18,6 +18,7 @@ Requires (postun): initscripts
 BuildRequires:	sendmail-devel, openssl-devel, pkgconfig
 BuildRequires:	autoconf
 Source0:	http://downloads.sourceforge.net/%{name}/%{name}-%{version}.tar.gz
+Source100:	opendkim.rpmlintrc
 
 %description
 OpenDKIM allows signing and/or verification of email through an open source
