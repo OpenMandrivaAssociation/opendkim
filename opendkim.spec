@@ -1,24 +1,23 @@
-%define libname %mklibname      opendkim %major
-%define libname_strl %mklibname	strl %major
-%define devname %mklibname      opendkim -d
 %define major 8
-%define minor 0
+%define strlmaj 1
+%define libname %mklibname opendkim %{major}
+%define libstrl %mklibname strl %{strlmaj}
+%define devname %mklibname opendkim -d
 
 Summary:	A DomainKeys Identified Mail (DKIM) milter to sign and/or verify mail
 Name:		opendkim
 Version:	2.7.0
-Release:	2
+Release:	3
 License:	BSD and Sendmail
-URL:		http://opendkim.org
 Group:		Networking/Mail
-Requires (pre): shadow-utils
-Requires (post): chkconfig
-Requires (preun): chkconfig, initscripts
-Requires (postun): initscripts
-BuildRequires:	sendmail-devel, openssl-devel, pkgconfig
-BuildRequires:	autoconf
+Url:		http://opendkim.org
 Source0:	http://downloads.sourceforge.net/%{name}/%{name}-%{version}.tar.gz
-Source100:	opendkim.rpmlintrc
+BuildRequires:	sendmail-devel
+BuildRequires:	pkgconfig(openssl)
+Requires (pre):	shadow-utils
+Requires (post,preun):	chkconfig
+Requires (preun):	initscripts
+Requires (postun):	initscripts
 
 %description
 OpenDKIM allows signing and/or verification of email through an open source
@@ -26,40 +25,39 @@ library that implements the DKIM service, plus a milter-based filter
 application that can plug in to any milter-aware MTA, including sendmail,
 Postfix, or any other MTA that supports the milter protocol.
 
-%package -n %libname
+%package -n %{libname}
 Summary:	An open source DKIM library
 Group:		System/Libraries
 
-%description -n %libname
-This package contains the library files required for running services built
-using libopendkim.
+%description -n %{libname}
+This package contains a shared library for %{name}.
 
-
-%package -n %libname_strl
+%package -n %{libstrl}
 Summary:	An open source DKIM library
 Group:		System/Libraries
+Obsoletes:	%{_lib}strl8 < 2.7.0-3 
 
-%description -n %libname_strl
-This package contains the library files required for running services built
-using libopendkim.
+%description -n %{libstrl}
+This package contains a shared library for %{name}.
 
-%package -n	%devname
+%package -n	%{devname}
 Summary:	Development files for libopendkim
 Group:		Development/C
 Requires:	%{libname} = %{version}-%{release}
-Requires:	%{libname_strl} = %{version}-%{release}
+Requires:	%{libstrl} = %{version}-%{release}
 Provides:	%{name}-devel = %{version}-%{release}
 
-%description -n %devname
-This package contains the static libraries, headers, and other support files
-required for developing applications against libopendkim.
+%description -n %{devname}
+This package contains the development files for %{name}.
 
 %prep
 %setup -q
+autoreconf -fiv
 
 %build
-autoreconf -fiv
-%configure --enable-stats
+%configure2_5x \
+	--disable-static \
+	--enable-stats
 
 %install
 %makeinstall_std
@@ -196,8 +194,6 @@ D %{_localstatedir}/run/%{name} 0700 %{name} %{name} -
 EOF
 
 rm -r %{buildroot}%{_prefix}/share/doc/%{name}
-rm %{buildroot}%{_libdir}/*.a
-rm %{buildroot}%{_libdir}/*.la
 
 mkdir -p %{buildroot}%{_localstatedir}/spool/%{name}
 mkdir -p %{buildroot}%{_localstatedir}/run/%{name}
@@ -253,33 +249,17 @@ exit 0
 %dir %attr(-,root,%{name}) %{_sysconfdir}/%{name}
 %dir %attr(-,root,%{name}) %{_sysconfdir}/%{name}/keys
 
-%files -n %libname
-%doc LICENSE LICENSE.Sendmail README
-%{_libdir}/libopendkim.so.%{major}.0.%{minor}
-%{_libdir}/libopendkim.so.%{major}
+%files -n %{libname}
+%{_libdir}/libopendkim.so.%{major}*
 
-%files -n %libname_strl
-%{_libdir}/libstrl.so.*
+%files -n %{libstrl}
+%{_libdir}/libstrl.so.%{strlmaj}*
 
-%files -n %devname
+%files -n %{devname}
 %doc LICENSE LICENSE.Sendmail
 %doc libopendkim/docs/*.html
 %{_includedir}/%{name}
 %{_includedir}/strl/strl.h
 %{_libdir}/*.so
 %{_libdir}/pkgconfig/*.pc
-
-
-%changelog
-* Thu Jul 26 2012 Alexander Khrukin <akhrukin@mandriva.org> 2.6.7-1
-+ Revision: 811147
-- version update 2.6.7
-
-* Mon Mar 19 2012 Alexander Khrukin <akhrukin@mandriva.org> 2.5.1-1
-+ Revision: 785784
-- version update 2.5.1
-
-* Tue Dec 27 2011 Alexander Khrukin <akhrukin@mandriva.org> 2.4.3-1
-+ Revision: 745549
-- imported package opendkim
 

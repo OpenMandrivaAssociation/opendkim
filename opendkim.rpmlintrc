@@ -1,3 +1,0 @@
-#false positive
-addFilter('E: incoherent-version-in-name')
-
