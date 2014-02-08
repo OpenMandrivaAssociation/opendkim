@@ -7,7 +7,7 @@
 Summary:	A DomainKeys Identified Mail (DKIM) milter to sign and/or verify mail
 Name:		opendkim
 Version:	2.7.0
-Release:	2
+Release:	3
 License:	BSD and Sendmail
 URL:		http://opendkim.org
 Group:		Networking/Mail
