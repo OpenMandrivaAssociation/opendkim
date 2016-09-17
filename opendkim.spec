@@ -1,4 +1,4 @@
-%define major 8
+%define major 9
 %define strlmaj 1
 %define libname %mklibname opendkim %{major}
 %define libstrl %mklibname strl %{strlmaj}
@@ -6,12 +6,13 @@
 
 Summary:	A DomainKeys Identified Mail (DKIM) milter to sign and/or verify mail
 Name:		opendkim
-Version:	2.7.0
-Release:	11
+Version:	2.8.3
+Release:	1
 License:	BSD and Sendmail
 Group:		Networking/Mail
 Url:		http://opendkim.org
 Source0:	http://downloads.sourceforge.net/%{name}/%{name}-%{version}.tar.gz
+Patch0:		opendkim-2.8.3-openssl-1.1.patch
 BuildRequires:	sendmail-devel
 BuildRequires:	pkgconfig(openssl)
 Requires (pre):	shadow-utils
@@ -52,10 +53,11 @@ This package contains the development files for %{name}.
 
 %prep
 %setup -q
+%apply_patches
 autoreconf -fiv
 
 %build
-%configure2_5x \
+%configure \
 	--disable-static \
 	--enable-stats
 
