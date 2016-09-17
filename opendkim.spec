@@ -15,8 +15,8 @@ Source0:	http://downloads.sourceforge.net/%{name}/%{name}-%{version}.tar.gz
 Patch0:		opendkim-2.8.3-openssl-1.1.patch
 BuildRequires:	sendmail-devel
 BuildRequires:	pkgconfig(openssl)
-Requires (pre):	shadow-utils
-Requires (post,preun):	chkconfig
+BuildRequires:	dos2unix
+Requires (pre,postun):	rpm-helper
 Requires (preun):	initscripts
 Requires (postun):	initscripts
 
@@ -64,8 +64,9 @@ autoreconf -fiv
 %install
 %makeinstall_std
 mkdir -p %{buildroot}%{_sysconfdir}
-mkdir -p %{buildroot}%{_initrddir}
-install -m 0755 contrib/init/redhat/opendkim %{buildroot}%{_initrddir}/%{name}
+mkdir -p %{buildroot}%{_unitdir}
+dos2unix contrib/systemd/opendkim.service
+install -m 0644 contrib/systemd/opendkim.service %{buildroot}%{_unitdir}/
 cat > %{buildroot}%{_sysconfdir}/%{name}.conf << 'EOF'
 ## BASIC OPENDKIM CONFIGURATION FILE
 ## See opendkim.conf(5) or %{_docdir}/%{name}-%{version}/%{name}.conf.sample for more
@@ -215,21 +216,8 @@ getent passwd %{name} >/dev/null || \
 	-c "OpenDKIM Milter" %{name}
 exit 0
 
-%post
-/sbin/chkconfig --add %{name} || :
-
-%preun
-if [ $1 -eq 0 ]; then
-	service %{name} stop >/dev/null || :
-	/sbin/chkconfig --del %{name} || :
-fi
-exit 0
-
 %postun
-if [ "$1" -ge "1" ] ; then
-	/sbin/service %{name} condrestart >/dev/null 2>&1 || :
-fi
-exit 0
+%_postun_userdel %{name}
 
 %files
 %doc FEATURES KNOWNBUGS LICENSE LICENSE.Sendmail RELEASE_NOTES RELEASE_NOTES.Sendmail INSTALL
@@ -243,7 +231,7 @@ exit 0
 %config(noreplace) %attr(640,%{name},%{name}) %{_sysconfdir}/%{name}/KeyTable
 %config(noreplace) %attr(640,%{name},%{name}) %{_sysconfdir}/%{name}/TrustedHosts
 %config(noreplace) %{_sysconfdir}/sysconfig/%{name}
-%{_initrddir}/%{name}
+%{_unitdir}/%{name}.service
 %{_sbindir}/*
 %{_mandir}/*/*
 %dir %attr(-,%{name},%{name}) %{_localstatedir}/spool/%{name}
