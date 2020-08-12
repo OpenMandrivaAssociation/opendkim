@@ -1,13 +1,11 @@
-%define major 9
-%define strlmaj 1
+%define major 10
 %define libname %mklibname opendkim %{major}
-%define libstrl %mklibname strl %{strlmaj}
 %define devname %mklibname opendkim -d
 
 Summary:	A DomainKeys Identified Mail (DKIM) milter to sign and/or verify mail
 Name:		opendkim
-Version:	2.8.3
-Release:	2
+Version:	2.10.3
+Release:	1
 License:	BSD and Sendmail
 Group:		Networking/Mail
 Url:		http://opendkim.org
@@ -33,19 +31,10 @@ Group:		System/Libraries
 %description -n %{libname}
 This package contains a shared library for %{name}.
 
-%package -n %{libstrl}
-Summary:	An open source DKIM library
-Group:		System/Libraries
-Obsoletes:	%{_lib}strl8 < 2.7.0-3 
-
-%description -n %{libstrl}
-This package contains a shared library for %{name}.
-
 %package -n	%{devname}
 Summary:	Development files for libopendkim
 Group:		Development/C
 Requires:	%{libname} = %{version}-%{release}
-Requires:	%{libstrl} = %{version}-%{release}
 Provides:	%{name}-devel = %{version}-%{release}
 
 %description -n %{devname}
@@ -224,7 +213,6 @@ exit 0
 %doc contrib/convert/convert_keylist.sh %{name}/*.sample
 %doc %{name}/%{name}.conf.simple-verify %{name}/%{name}.conf.simple
 %doc %{name}/README contrib/lua/*.lua
-%doc contrib/stats/README.opendkim-reportstats
 %config(noreplace) %{_sysconfdir}/%{name}.conf
 %config(noreplace) %{_sysconfdir}/tmpfiles.d/%{name}.conf
 %config(noreplace) %attr(640,%{name},%{name}) %{_sysconfdir}/%{name}/SigningTable
@@ -242,14 +230,10 @@ exit 0
 %files -n %{libname}
 %{_libdir}/libopendkim.so.%{major}*
 
-%files -n %{libstrl}
-%{_libdir}/libstrl.so.%{strlmaj}*
-
 %files -n %{devname}
 %doc LICENSE LICENSE.Sendmail
 %doc libopendkim/docs/*.html
 %{_includedir}/%{name}
-%{_includedir}/strl/strl.h
 %{_libdir}/*.so
 %{_libdir}/pkgconfig/*.pc
 
