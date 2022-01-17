@@ -1,6 +1,8 @@
 %define major 10
 %define libname %mklibname opendkim %{major}
 %define devname %mklibname opendkim -d
+%define tarname OpenDKIM-rel
+%define tarversion 2-10-3
 
 Summary:	A DomainKeys Identified Mail (DKIM) milter to sign and/or verify mail
 Name:		opendkim
@@ -8,12 +10,14 @@ Version:	2.10.3
 Release:	1
 License:	BSD and Sendmail
 Group:		Networking/Mail
-Url:		http://opendkim.org
-Source0:	http://downloads.sourceforge.net/%{name}/%{name}-%{version}.tar.gz
+Url:		https://github.com/trusteddomainproject/OpenDKIM
+Source0:	https://github.com/trusteddomainproject/OpenDKIM/archive/refs/tags/%{tarname}-opendkim-%{tarversion}.tar.gz
 Patch0:		opendkim-2.8.3-openssl-1.1.patch
 BuildRequires:	sendmail-devel
 BuildRequires:	pkgconfig(openssl)
 BuildRequires:	dos2unix
+BuildRequires:	pkgconfig(libbsd)
+
 Requires (pre,postun):	rpm-helper
 Requires (preun):	initscripts
 Requires (postun):	initscripts
@@ -41,8 +45,7 @@ Provides:	%{name}-devel = %{version}-%{release}
 This package contains the development files for %{name}.
 
 %prep
-%setup -q
-%autopatch -p1
+%autosetup -p1 -n %{tarname}-%{name}-%{tarversion}
 autoreconf -fiv
 
 %build
