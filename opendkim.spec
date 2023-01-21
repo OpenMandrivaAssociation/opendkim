@@ -8,7 +8,7 @@
 Summary:	A DomainKeys Identified Mail (DKIM) milter to sign and/or verify mail
 Name:		opendkim
 Version:	2.10.3
-Release:	4
+Release:	5
 License:	BSD and Sendmail
 Group:		Networking/Mail
 Url:		https://github.com/trusteddomainproject/OpenDKIM
@@ -99,7 +99,7 @@ LogWhy	yes
 UserID	%{name}:%{name}
 
 # Create a socket through which your MTA can communicate.
-Socket	local:/run/%{name}/%{name}.sock
+Socket	inet:8891@127.0.0.1
 
 # Required to use local socket with MTAs that access the socket as a non-
 # privileged user (e.g. Postfix)
@@ -186,6 +186,7 @@ cat > %{buildroot}%{_sysconfdir}/%{name}/TrustedHosts << 'EOF'
 # may be added on separate lines (IP addresses, hostnames, or CIDR ranges).
 # The localhost IP (127.0.0.1) should be the first entry in this file.
 127.0.0.1
+::1
 EOF
 
 install -p -d %{buildroot}%{_sysconfdir}/tmpfiles.d
