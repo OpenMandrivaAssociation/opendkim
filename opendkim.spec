@@ -8,7 +8,7 @@
 Summary:	A DomainKeys Identified Mail (DKIM) milter to sign and/or verify mail
 Name:		opendkim
 Version:	2.10.3
-Release:	2
+Release:	3
 License:	BSD and Sendmail
 Group:		Networking/Mail
 Url:		https://github.com/trusteddomainproject/OpenDKIM
@@ -18,10 +18,8 @@ BuildRequires:	sendmail-devel
 BuildRequires:	pkgconfig(openssl)
 BuildRequires:	dos2unix
 BuildRequires:	pkgconfig(libbsd)
-
+BuildRequires:	rpm-helper
 Requires (pre,postun):	rpm-helper
-Requires (preun):	initscripts
-Requires (postun):	initscripts
 
 %description
 OpenDKIM allows signing and/or verification of email through an open source
