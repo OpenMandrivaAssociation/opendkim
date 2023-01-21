@@ -1,5 +1,6 @@
 %define major 10
-%define libname %mklibname opendkim %{major}
+%define libname %mklibname opendkim
+%define oldlibname %mklibname opendkim %{major}
 %define devname %mklibname opendkim -d
 %define tarname OpenDKIM-rel
 %define tarversion 2-10-3
@@ -31,6 +32,7 @@ Postfix, or any other MTA that supports the milter protocol.
 %package -n %{libname}
 Summary:	An open source DKIM library
 Group:		System/Libraries
+%rename %{oldlibname}
 
 %description -n %{libname}
 This package contains a shared library for %{name}.
@@ -195,9 +197,9 @@ mkdir -p %{buildroot}%{_localstatedir}/run/%{name}
 mkdir -p %{buildroot}%{_sysconfdir}/%{name}
 mkdir %{buildroot}%{_sysconfdir}/%{name}/keys
 
-install -m 0755 stats/%{name}-reportstats %{buildroot}%{_prefix}/sbin/%{name}-reportstats
-sed -i 's|^OPENDKIMSTATSDIR="/var/db/opendkim"|OPENDKIMSTATSDIR="%{_localstatedir}/spool/%{name}"|g' %{buildroot}%{_prefix}/sbin/%{name}-reportstats
-sed -i 's|^OPENDKIMDATOWNER="mailnull:mailnull"|OPENDKIMDATOWNER="%{name}:%{name}"|g' %{buildroot}%{_prefix}/sbin/%{name}-reportstats
+install -m 0755 stats/%{name}-reportstats %{buildroot}%{_sbindir}/%{name}-reportstats
+sed -i 's|^OPENDKIMSTATSDIR="/var/db/opendkim"|OPENDKIMSTATSDIR="%{_localstatedir}/spool/%{name}"|g' %{buildroot}%{_sbindir}/%{name}-reportstats
+sed -i 's|^OPENDKIMDATOWNER="mailnull:mailnull"|OPENDKIMDATOWNER="%{name}:%{name}"|g' %{buildroot}%{_sbindir}/%{name}-reportstats
 
 chmod 0644 contrib/convert/convert_keylist.sh
 
@@ -239,4 +241,3 @@ exit 0
 %{_includedir}/%{name}
 %{_libdir}/*.so
 %{_libdir}/pkgconfig/*.pc
-
