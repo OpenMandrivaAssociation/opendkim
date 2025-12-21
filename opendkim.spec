@@ -16,6 +16,11 @@ Source0:	https://github.com/trusteddomainproject/OpenDKIM/archive/refs/tags/%{ta
 Source10:	opendkim.tmpfiles
 Source11:	opendkim.sysusers
 Patch0:		opendkim-2.8.3-openssl-1.1.patch
+BuildRequires:	autoconf
+BuildRequires:	automake
+BuildRequires:	libtool-base
+BuildRequires:	slibtool
+BuildRequires:	make
 BuildRequires:	sendmail-devel
 BuildRequires:	pkgconfig(openssl)
 BuildRequires:	dos2unix
